@@ -150,8 +150,19 @@ class HelloRestControllerTest extends AbstractTest {
         var helloDTO = new HelloDTO();
         helloDTO.setName("test01");
         helloDTO.setId("does-not-exist");
-        helloDTO.setModificationCount(2);
         helloRequestDTO.setResource(helloDTO);
+
+        //update with missing modificationCount
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .body(helloRequestDTO)
+                .when()
+                .pathParam("id", "11111")
+                .put("{id}")
+                .then().statusCode(BAD_REQUEST.getStatusCode());
+
+        helloDTO.setModificationCount(2);
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
