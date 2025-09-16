@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<!-- HELLO -->
+	<HELLO guid="11-111" optlock="2" tenant_id="default" name="hello1" />
+	<HELLO guid="22-222" optlock="0" tenant_id="default" name="hello2"/>
+	<HELLO guid="DELETE_1" optlock="0" tenant_id="default" name="hello3"/>
+
+	<HELLO guid="t-11-111" optlock="0" tenant_id="tenant-100" name="hello1"/>
+	<HELLO guid="t-22-222" optlock="0" tenant_id="tenant-100" name="hello2"/>
+	<HELLO guid="t-DELETE_1" optlock="0" tenant_id="tenant-200" name="hello3"/>
+</dataset>

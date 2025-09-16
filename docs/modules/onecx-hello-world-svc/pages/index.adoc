@@ -1,0 +1,8 @@
+include::onecx-hello-world-svc-attributes.adoc[opts=optional]
+
+== onecx-hello-world-svc
+
+include::docs.adoc[opts=optional]
+
+
+include::onecx-hello-world-svc-docs.adoc[opts=optional]

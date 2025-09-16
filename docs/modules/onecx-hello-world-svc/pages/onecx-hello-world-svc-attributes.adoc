@@ -1,0 +1,5 @@
+
+:docker-registry: https://github.com/onecx/onecx-hello-world-svc/pkgs/container/onecx-hello-world-svc
+:helm-registry: https://github.com/onecx/onecx-hello-world-svc/pkgs/container/charts%2Fonecx-hello-world-svc
+:properties-file: src/main/resources/application.properties
+:helm-file: src/main/helm/values.yaml
