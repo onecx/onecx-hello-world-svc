@@ -18,10 +18,7 @@ import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.hello.world.rs.internal.HelloInternalApi;
-import gen.org.tkit.onecx.hello.world.rs.internal.model.GetHelloByIdResponseDTO;
-import gen.org.tkit.onecx.hello.world.rs.internal.model.ProblemDetailResponseDTO;
-import gen.org.tkit.onecx.hello.world.rs.internal.model.SearchHelloRequestDTO;
-import gen.org.tkit.onecx.hello.world.rs.internal.model.UpdateHelloRequestDTO;
+import gen.org.tkit.onecx.hello.world.rs.internal.model.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,6 +35,13 @@ public class HelloRestController implements HelloInternalApi {
 
     @Inject
     ExceptionMapper exceptionMapper;
+
+    @Override
+    public Response createHello(CreateHelloRequestDTO createHelloRequestDTO) {
+        var hello = mapper.create(createHelloRequestDTO.getResource());
+        var created = dao.create(hello);
+        return Response.status(Response.Status.CREATED).entity(mapper.mapCreated(created)).build();
+    }
 
     @Override
     public Response deleteHello(String id) {

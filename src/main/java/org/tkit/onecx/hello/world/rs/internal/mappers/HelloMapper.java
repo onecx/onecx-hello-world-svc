@@ -29,4 +29,17 @@ public interface HelloMapper {
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     void update(HelloDTO updateHelloRequestDTO, @MappingTarget Hello hello);
+
+    @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "controlTraceabilityManual", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    Hello create(HelloDTO helloDTO);
+
+    @Mapping(target = "resource", source = "hello")
+    CreateHelloResponseDTO mapCreated(Hello hello);
 }

@@ -8,6 +8,33 @@ tags:
   - name: helloInternal
     description: Managing hello as an example
 paths:
+  /internal/hello:
+    post:
+      security:
+        - oauth2: [ ocx-hw:all, ocx-hw:write ]
+      tags:
+        - helloInternal
+      operationId: createHello
+      description: This operation performs a create.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHelloRequest'
+      responses:
+        '201':
+          description: New Hello created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateHelloResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /internal/hello/search:
     post:
       security:
@@ -128,8 +155,7 @@ components:
     Hello:
       type: object
       required:
-        - id
-        - modificationCount
+        - name
       properties:
         modificationCount:
           type: integer

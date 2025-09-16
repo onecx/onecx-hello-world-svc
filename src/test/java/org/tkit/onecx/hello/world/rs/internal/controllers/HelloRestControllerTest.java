@@ -22,6 +22,39 @@ import io.quarkus.test.junit.QuarkusTest;
 class HelloRestControllerTest extends AbstractTest {
 
     @Test
+    void createNewHelloTest() {
+
+        // create hello
+        var createHelloRequest = new CreateHelloRequestDTO();
+        var helloDTO = new HelloDTO();
+        helloDTO.setName("test");
+        createHelloRequest.setResource(helloDTO);
+
+        var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(createHelloRequest)
+                .post()
+                .then().statusCode(CREATED.getStatusCode())
+                .extract()
+                .body().as(CreateHelloResponseDTO.class);
+
+        assertThat(dto).isNotNull();
+
+        // create hello without body
+        var exception = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .when()
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+
+    }
+
+    @Test
     void deleteHelloTest() {
 
         // delete hello
@@ -148,11 +181,11 @@ class HelloRestControllerTest extends AbstractTest {
         // update none existing hello
         var helloRequestDTO = new UpdateHelloRequestDTO();
         var helloDTO = new HelloDTO();
-        helloDTO.setName("test01");
         helloDTO.setId("does-not-exist");
         helloRequestDTO.setResource(helloDTO);
+        helloDTO.setModificationCount(2);
 
-        //update with missing modificationCount
+        //update with missing name
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
@@ -162,7 +195,7 @@ class HelloRestControllerTest extends AbstractTest {
                 .put("{id}")
                 .then().statusCode(BAD_REQUEST.getStatusCode());
 
-        helloDTO.setModificationCount(2);
+        helloDTO.setName("test01");
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
