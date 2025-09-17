@@ -1,2 +1,2 @@
 # onecx-hello-world-svc
-OneCX Hello World SVC
+OneCx Hello World Service

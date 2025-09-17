@@ -1,0 +1,273 @@
+openapi: 3.0.3
+info:
+  title: onecx-hello-world-svc
+  description: This API provides endpoints to manage hello. This is an example project.
+  version: '1.0'
+
+tags:
+  - name: helloInternal
+    description: Managing hello as an example
+paths:
+  /internal/hello:
+    post:
+      security:
+        - oauth2: [ ocx-hw:all, ocx-hw:write ]
+      tags:
+        - helloInternal
+      operationId: createHello
+      description: This operation performs a create.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHelloRequest'
+      responses:
+        '201':
+          description: New Hello created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateHelloResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /internal/hello/search:
+    post:
+      security:
+        - oauth2: [ ocx-hw:all, ocx-hw:read ]
+      operationId: searchHellos
+      tags:
+        - helloInternal
+      description: This operation performs a search based on provided search criteria. Search for hello results.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchHelloRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchHelloResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /internal/hello/{id}:
+    get:
+      security:
+        - oauth2: [ ocx-hw:all, ocx-hw:read ]
+      operationId: getHelloById
+      tags:
+        - helloInternal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHelloByIdResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+        '404':
+          description: Not Found
+    put:
+      security:
+        - oauth2: [ ocx-hw:all, ocx-hw:write ]
+      operationId: updateHello
+      tags:
+        - helloInternal
+      description: This operation performs an update.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHelloRequest'
+      responses:
+        '204':
+          description: Hello updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateHelloResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+        '404':
+          description: Hello not found
+    delete:
+      security:
+        - oauth2: [ ocx-hw:all, ocx-hw:delete ]
+      tags:
+        - helloInternal
+      operationId: deleteHello
+      description: Delete Hello by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Hello deleted
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-hw:all: Grants access to all operations
+            ocx-hw:read: Grants read access
+            ocx-hw:write: Grants write access
+            ocx-hw:delete: Grants access to delete operations
+  schemas:
+    Hello:
+      type: object
+      required:
+        - name
+      properties:
+        modificationCount:
+          type: integer
+          format: int32
+        id:
+          type: string
+        name:
+          type: string
+    SearchHelloRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        pageNumber:
+          type: integer
+          format: int32
+          default: 0
+          description: The number of the page
+        pageSize:
+          type: integer
+          format: int32
+          default: 100
+          maximum: 1000
+          description: The size of the page.
+        name:
+          type: string
+    SearchHelloResponse:
+      type: object
+      required:
+        - stream
+        - size
+        - number
+        - totalPages
+        - totalElements
+      properties:
+        stream:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hello'
+        size:
+          type: integer
+          format: int32
+          description: Current page size.
+        number:
+          type: integer
+          format: int32
+          description: Current page number.
+        totalElements:
+          type: integer
+          format: int64
+          description: Total number of results on the server.
+        totalPages:
+          type: integer
+          format: int64
+          description: Total pages.
+    UpdateHelloRequest:
+      type: object
+      properties:
+        resource:
+          type: object
+          $ref: '#/components/schemas/Hello'
+    UpdateHelloResponse:
+      type: object
+      properties:
+        resource:
+          type: object
+          $ref: '#/components/schemas/Hello'
+    ProblemDetailResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        detail:
+          type: string
+        params:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailParam'
+        invalidParams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    ProblemDetailParam:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+    GetHelloByIdResponse:
+      type: object
+      required:
+        - resource
+      properties:
+        resource:
+          $ref: '#/components/schemas/Hello'
+    CreateHelloRequest:
+      type: object
+      properties:
+        resource:
+          type: object
+          $ref: '#/components/schemas/Hello'
+    CreateHelloResponse:
+      type: object
+      properties:
+        resource:
+          type: object
+          $ref: '#/components/schemas/Hello'
