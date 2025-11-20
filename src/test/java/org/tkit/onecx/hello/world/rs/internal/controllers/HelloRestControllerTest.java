@@ -43,7 +43,7 @@ class HelloRestControllerTest extends AbstractTest {
         assertThat(dto).isNotNull();
 
         // create hello without body
-        var exception = given()
+        given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
