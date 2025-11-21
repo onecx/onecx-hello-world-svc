@@ -14,7 +14,6 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.hello.world.domain.daos.HelloDAO;
 import org.tkit.onecx.hello.world.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.hello.world.rs.internal.mappers.HelloMapper;
-import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.hello.world.rs.internal.HelloInternalApi;
@@ -78,11 +77,6 @@ public class HelloRestController implements HelloInternalApi {
         mapper.update(updateHelloRequestDTO.getResource(), hello);
         dao.update(hello);
         return Response.noContent().build();
-    }
-
-    @ServerExceptionMapper
-    public RestResponse<ProblemDetailResponseDTO> exception(ConstraintException ex) {
-        return exceptionMapper.exception(ex);
     }
 
     @ServerExceptionMapper
