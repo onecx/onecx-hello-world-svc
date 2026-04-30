@@ -54,7 +54,14 @@ public class AbstractTest {
             PrivateKey privateKey = KeyUtils.generateKeyPair(2048).getPrivate();
             return Jwt.claims(claims.build()).sign(privateKey);
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new TestRuntimeException(ex);
+        }
+    }
+
+    public static class TestRuntimeException extends RuntimeException {
+
+        public TestRuntimeException(Throwable t) {
+            super(t);
         }
     }
 
